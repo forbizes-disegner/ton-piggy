@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Копилка TON</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="icon" href="./icon.png" />
+  <script type="module" crossorigin src="./assets/index-jgTUaUmh.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Dn2rWRCj.css">
+</head>
+<body>
+<main class="app">
+    <header class="top">
+        <div class="brand">
+            <span class="name">Копилка</span>
+            <span class="net" id="net"></span>
+        </div>
+        <div id="ton-connect"></div>
+    </header>
+
+    <!-- Кошелёк не подключён -->
+    <section id="view-connect" class="view" hidden>
+        <div class="stage" id="coin-connect"></div>
+        <div class="intro">
+            <h1>Копите на цель в TON</h1>
+            <p>Когда накопится нужная сумма, копилка сама отправит деньги на ваш кошелёк.</p>
+        </div>
+        <ul class="points">
+            <li>Пополнять можно когда угодно и с любого кошелька</li>
+            <li>Цель достигнута — деньги сразу у вас</li>
+            <li>Раньше цели — только с кодовым словом</li>
+        </ul>
+        <p class="hint center">Подключите кошелёк вверху, чтобы начать.</p>
+        <p class="warn" id="wrong-net" hidden></p>
+    </section>
+
+    <!-- Шаг 1: цель -->
+    <section id="view-create" class="view" hidden>
+        <form id="create-form" class="form" novalidate>
+            <h1>Новая копилка</h1>
+            <label class="field">
+                <span>На какую сумму копим, TON</span>
+                <input type="number" id="c-goal" min="1" step="1" inputmode="decimal" placeholder="500" required />
+            </label>
+            <label class="field">
+                <span>Первый взнос, TON</span>
+                <input type="number" id="c-first" min="0.1" step="0.1" value="1" inputmode="decimal" required />
+            </label>
+            <p class="summary" id="c-summary"></p>
+            <p class="error" id="c-error" hidden></p>
+            <button type="submit" class="primary">Дальше</button>
+            <button type="button" class="link" id="c-back" hidden>Назад</button>
+        </form>
+    </section>
+
+    <!-- Шаг 2: кодовое слово -->
+    <section id="view-code" class="view" hidden>
+        <div class="form">
+            <h1>Ваше кодовое слово</h1>
+            <p class="muted">Оно нужно, только если захотите забрать деньги раньше цели. Запишите его на бумагу или отдайте человеку, которому доверяете.</p>
+            <div class="code" id="k-word">—</div>
+            <button type="button" class="link center" id="k-copy">Скопировать</button>
+            <p class="note">Слово показывается <b>один раз</b> и нигде не сохраняется — ни в приложении, ни в блокчейне. Потеряете его — деньги придут только после достижения цели.</p>
+            <label class="check">
+                <input type="checkbox" id="k-saved" />
+                <span>Я сохранил(а) кодовое слово</span>
+            </label>
+            <button type="button" class="primary" id="k-create" disabled>Создать копилку</button>
+            <button type="button" class="link" id="k-back">Назад</button>
+        </div>
+    </section>
+
+    <!-- Копилка -->
+    <section id="view-piggy" class="view" hidden>
+        <div class="switcher" id="switcher" hidden>
+            <select id="p-select" aria-label="Выбрать копилку"></select>
+            <button type="button" class="link" id="p-new">Новая</button>
+        </div>
+
+        <div class="jar">
+            <div class="ring-wrap">
+                <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+                    <circle class="ring-track" cx="50" cy="50" r="47" />
+                    <circle class="ring-fill" id="p-ring" cx="50" cy="50" r="47" pathLength="100" />
+                </svg>
+                <div class="stage" id="coin-piggy"></div>
+            </div>
+            <div class="balance"><span id="p-balance">—</span> <small>TON</small></div>
+            <div class="status" id="p-status">—</div>
+        </div>
+
+        <div class="block" id="p-closed" hidden>
+            <p class="center"><b>Копилка открыта.</b> Все деньги отправлены на ваш кошелёк.</p>
+            <button type="button" class="primary" id="p-closed-new">Новая копилка</button>
+            <button type="button" class="link center" id="p-forget">Убрать из списка</button>
+        </div>
+
+        <p class="block hint center" id="p-pending" hidden>Ждём подтверждения в сети — обычно до минуты.</p>
+
+        <form class="block" id="p-deposit-form" novalidate>
+            <div class="row">
+                <input type="number" id="p-amount" min="0.01" step="0.1" inputmode="decimal" placeholder="Сумма, TON" aria-label="Сумма пополнения в TON" />
+                <button type="submit" class="primary">Отложить</button>
+            </div>
+            <div class="chips" id="p-chips">
+                <button type="button" data-amount="1">1</button>
+                <button type="button" data-amount="5">5</button>
+                <button type="button" data-amount="10">10</button>
+                <button type="button" data-amount="25">25</button>
+            </div>
+        </form>
+
+        <dl class="facts" id="p-facts">
+            <div><dt>Цель</dt><dd id="p-goal">—</dd></div>
+            <div><dt>Осталось</dt><dd id="p-left">—</dd></div>
+            <div><dt>Всего внесено</dt><dd id="p-total">—</dd></div>
+        </dl>
+
+        <details class="block unlock" id="p-unlock">
+            <summary>Забрать раньше цели</summary>
+            <p class="hint">Введите кодовое слово, которое вы получили при создании копилки. Все деньги уйдут на ваш кошелёк, а копилка закроется.</p>
+            <div class="row">
+                <input type="text" id="p-word" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX" aria-label="Кодовое слово" />
+                <button type="button" class="secondary" id="p-unlock-btn">Открыть</button>
+            </div>
+        </details>
+
+        <div class="block addr">
+            <span class="hint">Адрес копилки — пополнять можно с любого кошелька</span>
+            <code id="p-address">—</code>
+            <div class="row links">
+                <button type="button" class="link" id="p-copy">Скопировать</button>
+                <a class="link" id="p-explorer" target="_blank" rel="noopener">Tonviewer</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+</main>
+</body>
+</html>
