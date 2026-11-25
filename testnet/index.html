@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
     <link rel="icon" href="./icon.png" />
-  <script type="module" crossorigin src="./assets/index-5KWGFEvo.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CQmFr-Lk.css">
+  <script type="module" crossorigin src="./assets/index-OnYr-2hA.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CPhoZn8l.css">
 </head>
 <body>
 <main class="app">
@@ -54,6 +54,10 @@
         <form id="create-form" class="form" novalidate>
             <div class="step">Шаг 1 из 2</div>
             <h1>На что копим?</h1>
+            <label class="field">
+                <span>Название</span>
+                <input type="text" id="c-name" maxlength="40" placeholder="Например, Отпуск" autocomplete="off" />
+            </label>
             <label class="big-field">
                 <span>Цель</span>
                 <div class="big-input">
@@ -104,13 +108,11 @@
 
     <!-- Копилка -->
     <section id="view-piggy" class="view" hidden>
-        <div class="switcher" id="switcher" hidden>
-            <select id="p-select" aria-label="Выбрать копилку"></select>
-            <button type="button" class="chip-btn" id="p-new">+ Новая</button>
-        </div>
+        <div class="tabs" id="p-tabs" role="tablist" aria-label="Ваши копилки"></div>
 
         <div class="jar">
             <div class="stage" id="coin-piggy"></div>
+            <div class="piggy-name"><span id="p-name">Копилка</span><span class="badge" id="p-shared" hidden>Совместная</span></div>
             <div class="balance"><span id="p-balance">—</span><small>TON</small></div>
             <div class="progress">
                 <div class="bar"><i id="p-ring"></i></div>
@@ -153,6 +155,29 @@
             <div><small>Внесено</small><b id="p-total">—</b></div>
         </div>
 
+        <div class="panel" id="p-history">
+            <div class="panel-title">История пополнений</div>
+            <ul class="history" id="p-history-list"></ul>
+            <p class="hint" id="p-history-empty">Пока пополнений нет</p>
+        </div>
+
+        <div class="panel" id="p-share" hidden>
+            <div class="panel-title">Копим вместе</div>
+            <p class="hint">Пригласите друзей — они смогут пополнять копилку и будут получать уведомления. Забрать деньги может только владелец.</p>
+            <div class="members" id="p-members"></div>
+            <button type="button" class="secondary" id="p-invite">Пригласить друга</button>
+        </div>
+
+        <div class="panel" id="p-remind-panel" hidden>
+            <div class="panel-title">Напоминания</div>
+            <select id="p-remind" aria-label="Как часто напоминать">
+                <option value="off">Не напоминать</option>
+                <option value="daily">Каждый день в 12:00</option>
+                <option value="weekly">По понедельникам в 12:00</option>
+            </select>
+            <p class="hint">Бот напишет в Telegram. Уведомления о пополнениях приходят всегда.</p>
+        </div>
+
         <details class="panel unlock" id="p-unlock">
             <summary>Забрать раньше цели</summary>
             <p class="hint">Введите кодовое слово из шага создания. Все деньги уйдут на ваш кошелёк, копилка закроется.</p>
@@ -168,6 +193,7 @@
             <div class="row links">
                 <button type="button" class="link" id="p-copy">Скопировать</button>
                 <a class="link" id="p-explorer" target="_blank" rel="noopener">Открыть в Tonviewer</a>
+                <button type="button" class="link muted-link" id="p-leave" hidden>Убрать из списка</button>
             </div>
         </div>
     </section>
