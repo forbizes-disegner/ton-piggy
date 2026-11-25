@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
     <link rel="icon" href="./icon.png" />
-  <script type="module" crossorigin src="./assets/index-BcPLgKSz.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CfufR-tN.css">
+  <script type="module" crossorigin src="./assets/index-CokYgHQJ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CQmFr-Lk.css">
 </head>
 <body>
 <main class="app">
@@ -116,6 +116,11 @@
                 <div class="bar"><i id="p-ring"></i></div>
                 <div class="progress-row"><span id="p-status">—</span><span id="p-left">—</span></div>
             </div>
+        </div>
+
+        <div class="panel stuck" id="p-stuck" hidden>
+            <p><b>Цель набрана, но копилка не открылась сама.</b> Сеть списала крошечную комиссию, и на балансе оказалось чуть меньше цели. Положите 0,05 TON — копилка сразу отправит все деньги на ваш кошелёк.</p>
+            <button type="button" class="primary" id="p-stuck-btn">Открыть копилку</button>
         </div>
 
         <div class="panel" id="p-closed" hidden>
